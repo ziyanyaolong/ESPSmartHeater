@@ -24,8 +24,6 @@ protected:
     lv_obj_t* getLVGLObj();
 
 public:
-    void setStyle(lv_style_t style);
-
     void setSize(const FLSize &size);
     void setSize(lv_coord_t w, lv_coord_t h);
 
@@ -34,7 +32,6 @@ public:
 
     lv_obj_t* parent();
 
-    lv_style_t style();
     FLSize size();
     FLPoint point();
 };

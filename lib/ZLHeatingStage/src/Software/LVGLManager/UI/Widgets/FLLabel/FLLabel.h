@@ -9,6 +9,10 @@ class FLLabel : public WidgetAPI
 {
 private:
     lv_obj_t *label;
+    lv_style_t *style;
+
+private:
+    void initStyle();
 
 public:
     FLLabel(WidgetAPI *parent = nullptr);

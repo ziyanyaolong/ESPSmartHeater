@@ -25,11 +25,6 @@ lv_obj_t *WidgetAPI::getLVGLObj()
     return this->obj;
 }
 
-void WidgetAPI::setStyle(lv_style_t style)
-{
-    memcpy(&(this->_style), &style, sizeof(lv_style_t));
-}
-
 void WidgetAPI::setSize(const FLSize &size)
 {
     lv_obj_set_size(this->obj, size.width(), size.height());
@@ -53,11 +48,6 @@ void WidgetAPI::setPoint(lv_coord_t x, lv_coord_t y)
 lv_obj_t *WidgetAPI::parent()
 {
     return this->_parent;
-}
-
-lv_style_t WidgetAPI::style()
-{
-    return this->_style;
 }
 
 FLSize WidgetAPI::size()

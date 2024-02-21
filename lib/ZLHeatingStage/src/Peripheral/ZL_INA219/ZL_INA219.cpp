@@ -75,6 +75,23 @@ void ZL_INA219::defaultDebugPrint()
     {
         ZLHS_DEBUG_PRINTLN("Overflow! Choose higher PGAIN");
     }
-    
+
     ZLHS_DEBUG_PRINTLN();
+}
+
+float ZL_INA219::getVoltageV()
+{
+    float shuntVoltage_mV = 0.0;
+    float loadVoltage_V = 0.0;
+    float busVoltage_V = 0.0;
+
+    shuntVoltage_mV = ina219->getShuntVoltage_mV();
+    busVoltage_V = ina219->getBusVoltage_V();
+    loadVoltage_V = busVoltage_V + (shuntVoltage_mV / 1000.0f);
+    return loadVoltage_V;
+}
+
+float ZL_INA219::getCurrentA()
+{
+    return this->ina219->getCurrent_mA() / 100.0f;
 }

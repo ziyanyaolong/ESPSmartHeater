@@ -95,7 +95,7 @@ void TemperatureControl::loop()
     // ZLHS_DEBUG_PRINTF("HEX-RG-T:%x, HEX-RG-S:%x\n", this->zl_CS1238->readReg(true).allValue, this->zl_CS1238->readReg().allValue);
     ZLHS_DEBUG_PRINTF("T:%d, %.4f, HEX T:%x\n", iiiv, this->zl_CS1238->readADCRealValue(false), iiiv);
 
-    this->zl_INA219->defaultDebugPrint();
+    // this->zl_INA219->defaultDebugPrint();
     // heater->setPercentage(60.0f);
     // 映射温差和PID相关参数
     // heater->setPercentage(this->outValue);

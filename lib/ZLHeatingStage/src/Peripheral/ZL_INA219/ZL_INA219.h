@@ -22,6 +22,9 @@ protected:
 
 public:
     void defaultDebugPrint();
+
+    float getVoltageV();
+    float getCurrentA();
 };
 
 #endif
