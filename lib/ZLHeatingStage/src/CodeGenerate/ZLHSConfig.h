@@ -6,4 +6,6 @@
 
 #define ZLHS_DEBUG_MODE_ON
 
+// #define ZLHS_SIMULATOR_DEBUG
+
 #endif

@@ -58,10 +58,25 @@ void DisplayDriver::touchInit()
 {
     auto cfg = touchInstance.config();
 
-    cfg.x_min = 0;
-    cfg.x_max = 320;
-    cfg.y_min = 0;
-    cfg.y_max = 240;
+    if (preferences.begin("lcd-touch", true))
+    {
+        cfg.x_min = preferences.getUShort("xmin");
+        cfg.x_max = preferences.getUShort("xmax");
+        cfg.y_min = preferences.getUShort("ymin");
+        cfg.y_max = preferences.getUShort("ymax");
+
+        ZLHS_DEBUG_PRINTF("%d, %d, %d, %d\n", cfg.x_min, cfg.x_max, cfg.y_min, cfg.y_max);
+    }
+    else
+    {
+        cfg.x_min = 0;
+        cfg.x_max = 320;
+        cfg.y_min = 0;
+        cfg.y_max = 240;
+    }
+
+    preferences.end();
+
     cfg.pin_int = ZLHS_TFT_TOUCH_INT_PIN;
     cfg.bus_shared = true;
     cfg.offset_rotation = 1;
@@ -119,9 +134,67 @@ void DisplayDriver::touchXYMapUpdata(uint16_t xMin, uint16_t xMax, uint16_t yMin
 
     cfg.x_min = xMin;
     cfg.x_max = xMax;
-    cfg.y_min = yMin;
-    cfg.y_max = yMax;
+    cfg.y_min = yMax;
+    cfg.y_max = yMin;
+
+    if (preferences.begin("lcd-touch", false))
+    {
+        preferences.putUShort("xmin", xMin);
+        preferences.putUShort("xmax", xMax);
+        preferences.putUShort("ymin", yMax);
+        preferences.putUShort("ymax", yMin);
+
+        ZLHS_DEBUG_PRINTLN("Touch Data Write OK.");
+    }
+
+    preferences.end();
+
+    ZLHS_DEBUG_PRINTF("%d, %d, %d, %d\n", cfg.x_min, cfg.x_max, cfg.y_min, cfg.y_max);
 
     touchInstance.config(cfg);
     panelInstance.setTouch(&touchInstance);
+}
+
+bool DisplayDriver::setDefaultTouchMap()
+{
+    bool isOK = false;
+    auto cfg = touchInstance.config();
+
+    if (preferences.begin("lcd-touch", false))
+    {
+        if (cfg.x_min != 0)
+        {
+            cfg.x_min = 0;
+            preferences.putUShort("xmin", 0);
+            isOK = true;
+        }
+
+        if (cfg.x_max != 320)
+        {
+            cfg.x_max = 320;
+            preferences.putUShort("xmax", 320);
+            isOK = true;
+        }
+
+        if (cfg.y_min != 0)
+        {
+            cfg.y_min = 0;
+            preferences.putUShort("ymin", 0);
+            isOK = true;
+        }
+
+        if (cfg.y_max != 240)
+        {
+            cfg.y_max = 240;
+            preferences.putUShort("ymax", 240);
+            isOK = true;
+        }
+    }
+
+    preferences.end();
+
+    touchInstance.config(cfg);
+    panelInstance.setTouch(&touchInstance);
+
+    return isOK;
 }

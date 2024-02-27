@@ -7,7 +7,8 @@
 
 #include "ZLHSSystem/ZLHSSystem.h"
 #include "Software/LVGLManager/UI/Widgets/FLLabel/FLLabel.h"
-#include "Peripheral/ZL_INA219/ZL_INA219.h"
+#include "Software/LVGLManager/UI/Widgets/FLWidget/FLWidget.h"
+#include "Software/LVGLManager/UI/Widgets/FLLayout/FLLayoutFlex/FLLayoutFlex.h"
 
 class MainUI : public LVGLUIAPI
 {
@@ -16,6 +17,16 @@ public:
     virtual ~MainUI();
 
 private:
+	FLLayoutFlex* fLayoutPage = nullptr;
+
+    FLLayoutFlex* fLayoutVoltage = nullptr;
+	FLLayoutFlex* fLayoutCurrent = nullptr;
+	FLLayoutFlex* fLayoutPower = nullptr;
+
+    FLWidget* widgetVoltage = nullptr;
+	FLWidget* widgetCurrent = nullptr;
+	FLWidget* widgetPower = nullptr;
+
     FLLabel *labelVoltage1 = nullptr;
     FLLabel *labelVoltage2 = nullptr;
     FLLabel *labelCurrent1 = nullptr;
@@ -23,10 +34,11 @@ private:
     FLLabel *hPower1 = nullptr;
     FLLabel *hPower2 = nullptr;
 
-    ZL_INA219* zl_INA219 = nullptr;
-
+    double eValue = 0.0f;
 private:
 protected:
+    virtual std::string getName() override { return std::string(ZLHS_EX_TO_STRING(MainUI)); }
+
     virtual uint8_t init() override;
     virtual void setupUI(lv_obj_t *page) override;
     virtual void loop() override;

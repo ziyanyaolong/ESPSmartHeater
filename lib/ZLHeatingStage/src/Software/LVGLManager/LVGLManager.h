@@ -4,14 +4,9 @@
 #include <lvgl.h>
 #include <list>
 
-#include "Software/LVGLManager/API/LVGLUIAPI.h"
-
-#include "Peripheral/DisplayDriver/DisplayDriver.h"
 #include "Peripheral/LVGLDriver/LVGLDriver.h"
-#include "Peripheral/EncoderDriver/EncoderDriver.h"
-#include "Peripheral/ZL_Buzzer/ZL_Buzzer.h"
 
-#include "Software/LVGLManager/UI/TouchScreenCalibration/TouchScreenCalibration.h"
+#include "Software/LVGLManager/API/LVGLUIAPI.h"
 #include "Software/LVGLManager/UI/MainUI/MainUI.h"
 
 #include "IPC/MemoryShader/MemoryShader.h"
@@ -28,16 +23,22 @@ public:
     virtual ~LVGLManager();
 
 private:
+#ifndef ZLHS_SIMULATOR_DEBUG
+    LVGLDriver* lvglDriver = nullptr;
+#endif
+
+    LVGLUIAPI::TimeType newTime = 0;
+
     std::list<LVGLUIAPI *> uiList;
 
-    LVGLDriver *driver = nullptr;
-    DisplayDriver *baseDriver = nullptr;
-    EncoderDriver *encoderDriver = nullptr;
-    ZL_Buzzer *zl_Buzzer = nullptr;
-
-    double eValue = 0.0f;
+    lv_obj_t *menu;
+    lv_obj_t *menuSub;
+    lv_obj_t *menuWidget;
+    lv_obj_t *section;
 
 private:
+    lv_obj_t *createNewPage(lv_obj_t *parent, lv_obj_t *uiPage, const std::string &name);
+
 protected:
     virtual int init() override;
     virtual void loop() override;

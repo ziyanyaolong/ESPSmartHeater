@@ -6,6 +6,7 @@
 #include <Peripheral/ZL_CS1238/ZL_CS1238.h>
 #include <Peripheral/Heater/Heater.h>
 #include <Peripheral/DisplayDriver/DisplayDriver.h>
+#include <Peripheral/LVGLDriver/LVGLDriver.h>
 #include <Peripheral/EncoderDriver/EncoderDriver.h>
 #include <Peripheral/ZL_INA219/ZL_INA219.h>
 #include <Peripheral/ZL_Buzzer/ZL_Buzzer.h>

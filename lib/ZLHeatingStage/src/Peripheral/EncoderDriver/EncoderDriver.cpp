@@ -32,7 +32,7 @@ void ICACHE_RAM_ATTR EncoderDriver::buttonEvent(void *classPointer)
 {
     auto pointer = static_cast<EncoderDriver *>(classPointer);
 
-    pointer->pushNow = digitalRead(pointer->swPin);
+    pointer->pushNow = !digitalRead(pointer->swPin);
 
     if (pointer->buzzerActivate)
     {
@@ -53,6 +53,8 @@ int EncoderDriver::load()
 
     attachInterruptArg(this->dtPin, &EncoderDriver::countEvent, static_cast<void *>(this), FALLING);
     attachInterruptArg(this->swPin, &EncoderDriver::buttonEvent, static_cast<void *>(this), FALLING);
+
+    this->pushNow = !digitalRead(this->swPin);
 
     return 0;
 }

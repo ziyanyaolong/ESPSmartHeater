@@ -39,6 +39,7 @@ int TemperatureControl::init()
     this->heater = ZLHSSystem::getRegAPICast<Heater>(ZLHS_EX_TO_STRING(Heater), BaseSystemAPI::APIType::Peripheral, UINT32_MAX);
     this->zl_CS1238 = ZLHSSystem::getRegAPICast<ZL_CS1238>(ZLHS_EX_TO_STRING(ZL_CS1238), BaseSystemAPI::APIType::Peripheral, UINT32_MAX);
     this->zl_INA219 = ZLHSSystem::getRegAPICast<ZL_INA219>(ZLHS_EX_TO_STRING(ZL_INA219), BaseSystemAPI::APIType::Peripheral, UINT32_MAX);
+    this->encoderDriver = ZLHSSystem::getRegAPICast<EncoderDriver>(ZLHS_EX_TO_STRING(EncoderDriver), BaseSystemAPI::APIType::Peripheral, UINT32_MAX);
 
     // 如果获取不到则初始化失败，向系统提交初始化错误
     if (this->zl_CS1238 == nullptr)
@@ -48,16 +49,23 @@ int TemperatureControl::init()
 
     if (this->heater == nullptr)
     {
-        return -1;
+        return -2;
     }
 
     if (this->zl_INA219 == nullptr)
     {
-        return -1;
+        return -3;
+    }
+
+    if (this->encoderDriver == nullptr)
+    {
+        return -4;
     }
 
     // 向内存共享管理器申请内存区域
     MemoryShader::instance()->addNewMemorySpace(ZLHS_MEMORY_SPACE_NAME_TARGET_TEMPERATURE, sizeof(double));
+    MemoryShader::instance()->addNewMemorySpace(ZLHS_MEMORY_SPACE_NAME_CURRENT, sizeof(double));
+    MemoryShader::instance()->addNewMemorySpace(ZLHS_MEMORY_SPACE_NAME_VOLTAGE, sizeof(double));
 
     // 设置参考电压为5V
     this->zl_CS1238->setREFType(5.0f);
@@ -83,8 +91,19 @@ int TemperatureControl::init()
 
 void TemperatureControl::loop()
 {
-    MemoryShader::instance()->readData(ZLHS_MEMORY_SPACE_NAME_TARGET_TEMPERATURE, static_cast<void *>(&targetValue));
+    targetValue += this->encoderDriver->getCount();
+
     heater->setPercentage(targetValue);
+
+    MemoryShader::instance()->writeData(ZLHS_MEMORY_SPACE_NAME_TARGET_TEMPERATURE, static_cast<const void *>(&targetValue));
+
+    // 电流值传输（暂定）
+    tempValue = zl_INA219->getCurrentA();
+    MemoryShader::instance()->writeData(ZLHS_MEMORY_SPACE_NAME_CURRENT, static_cast<const void *>(&tempValue));
+
+    // 电压值传输（暂定）
+    tempValue = zl_INA219->getVoltageV();
+    MemoryShader::instance()->writeData(ZLHS_MEMORY_SPACE_NAME_VOLTAGE, static_cast<const void *>(&tempValue));
 
     // PID计算
     // pid->Compute();

@@ -8,6 +8,7 @@
 #include "Peripheral/Heater/Heater.h"
 #include "Peripheral/ZL_CS1238/ZL_CS1238.h"
 #include "Peripheral/ZL_INA219/ZL_INA219.h"
+#include "Peripheral/EncoderDriver/EncoderDriver.h"
 
 #include "API/SoftwareAPI.h"
 #include "ZLHSSystem/ZLHSSystem.h"
@@ -43,6 +44,7 @@ private:
     Heater *heater;
     ZL_CS1238 *zl_CS1238;
     ZL_INA219 *zl_INA219;
+    EncoderDriver *encoderDriver;
 
     DynamicValue pValue = DynamicValue(0.4f, 0.4f, 0.2f, 0.6f);
     DynamicValue iValue = DynamicValue(0.5f, 0.5f, 0.45f, 0.55f);
@@ -52,6 +54,7 @@ private:
     double inValue = 0.0f;
     double outValue = 0.0f;
     double targetValue = 0.0f;
+    double tempValue = 0.0f;
 
 private:
     void dynamicRangeConstraint(double inValue, DynamicValue &outValue);

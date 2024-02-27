@@ -8,6 +8,9 @@
 
 #include "IPC/ReadWriteLock/ReadWriteLock.h"
 
+/*
+下个版本将加入指针直接操作功能，允许外部类保存void类型地址指针，在访问时传入void类型地址指针即可自动转换操作，牺牲极微量的内存，使得在有超多内存块时省下查找的CPU消耗，提高性能
+*/
 class MemoryShader
 {
 private:

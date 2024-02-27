@@ -1,5 +1,5 @@
-#ifndef ZL_LVGL_UI_FLLABEL_H
-#define ZL_LVGL_UI_FLLABEL_H
+#ifndef ZL_LVGL_WIDGET_FLLABEL_H
+#define ZL_LVGL_WIDGET_FLLABEL_H
 
 #include <string>
 
@@ -8,7 +8,6 @@
 class FLLabel : public WidgetAPI
 {
 private:
-    lv_obj_t *label;
     lv_style_t *style;
 
 private:
@@ -20,7 +19,7 @@ public:
 
     virtual ~FLLabel();
 
-    void setText(std::string text);
+    void setText(const std::string& text);
     std::string getText();
 };
 

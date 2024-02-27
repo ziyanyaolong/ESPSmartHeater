@@ -12,6 +12,12 @@ WidgetAPI::WidgetAPI(lv_obj_t *parent)
 
 WidgetAPI::~WidgetAPI()
 {
+    if (this->obj)
+    {
+        lv_obj_del(this->obj);
+        this->obj = nullptr;
+    }
+
     this->_parent = nullptr;
 }
 
@@ -43,6 +49,11 @@ void WidgetAPI::setPoint(const FLPoint &point)
 void WidgetAPI::setPoint(lv_coord_t x, lv_coord_t y)
 {
     lv_obj_set_pos(this->obj, x, y);
+}
+
+void WidgetAPI::setCenter()
+{
+    lv_obj_center(this->obj);
 }
 
 lv_obj_t *WidgetAPI::parent()

@@ -56,7 +56,7 @@ void LVGLDriver::touchCalibrationTest()
 
     data.state = LV_INDEV_STATE_REL;
 
-    if (this->driver->getTouch<lv_coord_t>(&(data.point.x), &(data.point.y)))
+    if (this->driver->getTouchRaw<lv_coord_t>(&(data.point.x), &(data.point.y)))
     {
         data.state = LV_INDEV_STATE_PR;
     }
@@ -71,6 +71,7 @@ void LVGLDriver::touchCalibrationTest()
 
     case TouchCalibrationState::Start:
     {
+        driver->setDefaultTouchMap();
         this->tcData.tcState = TouchCalibrationState::Point1;
         break;
     }
@@ -147,9 +148,17 @@ void LVGLDriver::touchCalibrationTest()
             this->tcData.yMin = static_cast<lv_coord_t>((((double)(this->tcData.p2.y)) + ((double)(this->tcData.p4.y))) / ((double)(2.0f)));
             this->tcData.yMax = static_cast<lv_coord_t>((((double)(this->tcData.p1.y)) + ((double)(this->tcData.p3.y))) / ((double)(2.0f)));
 
+            int16_t minOffs = min(this->tcData.yMax, min(this->tcData.yMin, min(this->tcData.xMin, this->tcData.xMax)));
+
+            if (minOffs > 0)
+            {
+                minOffs = 0;
+            }
+
             ZLHS_DEBUG_PRINTF("xMin:%d, xMax:%d, yMin:%d, yMax:%d\r\n", this->tcData.xMin, this->tcData.xMax, this->tcData.yMin, this->tcData.yMax);
 
-            this->driver->touchXYMapUpdata((uint16_t)(this->tcData.xMin), (uint16_t)(this->tcData.xMax), (uint16_t)(this->tcData.yMin), (uint16_t)(this->tcData.yMax));
+            this->driver->touchXYMapUpdata((uint16_t)(this->tcData.xMin) + minOffs, (uint16_t)(this->tcData.xMax) + minOffs, (uint16_t)(this->tcData.yMin) + minOffs, (uint16_t)(this->tcData.yMax) + minOffs);
+            // this->driver->touchXYMapUpdata((uint16_t)(this->tcData.yMin) + minOffs, (uint16_t)(this->tcData.yMax) + minOffs, (uint16_t)(this->tcData.xMin) + minOffs, (uint16_t)(this->tcData.xMax) + minOffs);
             this->tcData.tcState = TouchCalibrationState::Close;
             this->tcData.touchCalibration = false;
         }

@@ -5,6 +5,7 @@
 
 #include <Arduino.h>
 #include <lvgl.h>
+#include <Preferences.h>
 
 #include "API/PeripheralAPI.h"
 
@@ -15,6 +16,8 @@ public:
     virtual ~DisplayDriver();
 
 private:
+    Preferences preferences;
+
     // lgfx::Panel_ILI9163 panelInstance;
     lgfx::Panel_ILI9341 panelInstance;
     // lgfx::Panel_ILI9342 panelInstance;
@@ -44,6 +47,8 @@ public:
     void touchXYMapUpdata(uint16_t xMin, uint16_t xMax, uint16_t yMin, uint16_t yMax);
 
 public:
+    bool setDefaultTouchMap();
+
     // 快速生成Set和Gat函数
     DEFINE_ZLHS_DATA_NO_DE(tftSPIDevice, TFTSPIDevice, spi_host_device_t, public);
     DEFINE_ZLHS_DATA_NO_DE(tasSPIDevice, TASSPIDevice, spi_host_device_t, public);
